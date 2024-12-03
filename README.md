@@ -104,6 +104,8 @@ WHERE
 	OR
 	total_sale IS NULL
 ```
+** Because of deleting Null values
+![image](https://github.com/user-attachments/assets/e75d74cc-6094-4de6-b072-fdd6aacc9210)
 
 ### 3. Data Analysis & Findings
 
@@ -111,12 +113,11 @@ The following SQL queries were developed to answer specific business questions:
 
 1. **Write a SQL query to retrieve all columns for sales made on '2022-11-05**:
 ```sql
-SELECT *
-FROM retail_sales
-WHERE sale_date = '2022-11-05';
+SELECT*
+FROM sales_data
+WHERE sale_date = '2022-11-05'
 ```
-** Because of deleting Null values
-![image](https://github.com/user-attachments/assets/e75d74cc-6094-4de6-b072-fdd6aacc9210)
+![image](https://github.com/user-attachments/assets/d3b6f36e-96dd-4a07-86d1-943512f71b97)
 
 2. **Write a SQL query to retrieve all transactions where the category is 'Clothing' and the quantity sold is more than 4 in the month of Nov-2022**:
 ```sql
