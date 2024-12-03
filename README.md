@@ -1,4 +1,4 @@
-# Retail Sales Analysis SQL Project
+![image](https://github.com/user-attachments/assets/c8f046f8-8850-4e27-929a-f1348912688a)# Retail Sales Analysis SQL Project
 
 ## Project Overview
 
@@ -37,8 +37,8 @@ CREATE TABLE sales_data (
     cogs FLOAT,
     total_sale FLOAT
 );
-![image](https://github.com/user-attachments/assets/998b1cb3-ef1a-4b34-a5b2-1e370d39b41d)
 ```
+![image](https://github.com/user-attachments/assets/998b1cb3-ef1a-4b34-a5b2-1e370d39b41d)
 
 
 
@@ -50,22 +50,59 @@ CREATE TABLE sales_data (
 - **Null Value Check**: Check for any null values in the dataset and delete records with missing data.
 
 ```sql
-SELECT COUNT(*) FROM retail_sales;
+SELECT 
+	COUNT(*)
+FROM sales_data
+```
+![image](https://github.com/user-attachments/assets/e961dede-4bed-4a85-8654-96a9338adae2)
 
-SELECT COUNT(DISTINCT customer_id) FROM retail_sales;
-SELECT DISTINCT category FROM retail_sales;
+```sql
 
-SELECT * FROM retail_sales
+SELECT count(DISTINCT customer_id) as total_unique_customer FROM sales_data
+```
+![image](https://github.com/user-attachments/assets/f4449a54-fd66-4497-b479-7cbf63a78233)
+
+```sql
+SELECT COUNT(DISTINCT category) as unique_category FROM sales_data;
+```
+![image](https://github.com/user-attachments/assets/c1791bc3-9e2c-4a7a-bf05-31820ce272d7)
+
+```sql
+DELETE FROM sales_data
 WHERE 
-    sale_date IS NULL OR sale_time IS NULL OR customer_id IS NULL OR 
-    gender IS NULL OR age IS NULL OR category IS NULL OR 
-    quantity IS NULL OR price_per_unit IS NULL OR cogs IS NULL;
+	transactions_id IS NULL
+	OR
+	sale_date IS NULL
+	OR
+	sale_time IS NULL
+	OR
+	gender IS NULL
+	OR
+	category IS NULL
+	OR
+	quantity IS NULL
+	OR 
+	cogs IS NULL
+	OR
+	total_sale IS NULL
 
-DELETE FROM retail_sales
+SELECT * FROM sales_data
 WHERE 
-    sale_date IS NULL OR sale_time IS NULL OR customer_id IS NULL OR 
-    gender IS NULL OR age IS NULL OR category IS NULL OR 
-    quantity IS NULL OR price_per_unit IS NULL OR cogs IS NULL;
+	transactions_id IS NULL
+	OR
+	sale_date IS NULL
+	OR
+	sale_time IS NULL
+	OR
+	gender IS NULL
+	OR
+	category IS NULL
+	OR
+	quantity IS NULL
+	OR 
+	cogs IS NULL
+	OR
+	total_sale IS NULL
 ```
 
 ### 3. Data Analysis & Findings
@@ -78,116 +115,145 @@ SELECT *
 FROM retail_sales
 WHERE sale_date = '2022-11-05';
 ```
+** Because of deleting Null values
+![image](https://github.com/user-attachments/assets/e75d74cc-6094-4de6-b072-fdd6aacc9210)
 
 2. **Write a SQL query to retrieve all transactions where the category is 'Clothing' and the quantity sold is more than 4 in the month of Nov-2022**:
 ```sql
-SELECT 
-  *
-FROM retail_sales
-WHERE 
-    category = 'Clothing'
-    AND 
-    TO_CHAR(sale_date, 'YYYY-MM') = '2022-11'
-    AND
-    quantity >= 4
+--Method -1
+SELECT *
+FROM sales_data 
+WHERE category = 'Clothing'
+	AND	
+	TO_CHAR(sale_date, 'YYYY-MM') = '2022-11'
+	AND 
+	quantity >=4
+
+-- method-2
+
+SELECT *
+FROM sales_data
+WHERE category = 'Clothing'
+	AND sale_date BETWEEN DATE '2022-11-01' AND DATE '2022-11-30'
+	AND quantity >=4;
 ```
+![image](https://github.com/user-attachments/assets/e4bf215e-6a5c-4812-8c27-7b3b0c94686a)
+
 
 3. **Write a SQL query to calculate the total sales (total_sale) for each category.**:
 ```sql
-SELECT 
-    category,
-    SUM(total_sale) as net_sale,
-    COUNT(*) as total_orders
-FROM retail_sales
-GROUP BY 1
+SELECT
+	category,
+	sum(total_sale) as net_sale,
+	COUNT(*) AS total_orders
+FROM sales_data
+group by category
 ```
+![image](https://github.com/user-attachments/assets/9b870217-4cc8-4bc1-b9cd-30b7d0ac8535)
 
 4. **Write a SQL query to find the average age of customers who purchased items from the 'Beauty' category.**:
 ```sql
 SELECT
-    ROUND(AVG(age), 2) as avg_age
-FROM retail_sales
-WHERE category = 'Beauty'
+	ROUND(avg(age),2) AS avg_age
+FROM sales_data 
+where category= 'Beauty'
 ```
+![image](https://github.com/user-attachments/assets/c59c1d80-191b-4ff0-b9a9-b14a528d2d90)
 
 5. **Write a SQL query to find all transactions where the total_sale is greater than 1000.**:
 ```sql
-SELECT * FROM retail_sales
-WHERE total_sale > 1000
+SELECT
+	*
+FROM sales_data 
+where total_sale > 1000
+
 ```
+![image](https://github.com/user-attachments/assets/dd032c92-c427-4cb6-aae8-bbfd6086f6ef)
+
 
 6. **Write a SQL query to find the total number of transactions (transaction_id) made by each gender in each category.**:
 ```sql
-SELECT 
-    category,
-    gender,
-    COUNT(*) as total_trans
-FROM retail_sales
-GROUP 
-    BY 
-    category,
-    gender
-ORDER BY 1
+SELECT
+	category,gender, count(transactions_id)
+FROM
+	sales_data
+GROUP BY category,gender
+ORDER BY category
 ```
+![image](https://github.com/user-attachments/assets/7aee4869-e1de-43f9-910b-a8ba5e970a86)
 
 7. **Write a SQL query to calculate the average sale for each month. Find out best selling month in each year**:
 ```sql
+SELECT * 
+FROM(
 SELECT 
-       year,
-       month,
-    avg_sale
-FROM 
-(    
-SELECT 
-    EXTRACT(YEAR FROM sale_date) as year,
-    EXTRACT(MONTH FROM sale_date) as month,
-    AVG(total_sale) as avg_sale,
-    RANK() OVER(PARTITION BY EXTRACT(YEAR FROM sale_date) ORDER BY AVG(total_sale) DESC) as rank
-FROM retail_sales
-GROUP BY 1, 2
-) as t1
-WHERE rank = 1
+	EXTRACT(YEAR FROM sale_date) as year,
+	EXTRACT(MONTH FROM sale_date) as month,
+	avg(total_sale) as avg_sale,
+	RANK() OVER(PARTITION BY EXTRACT(YEAR FROM sale_date) ORDER BY AVG(total_sale) desc ) as rank
+FROM
+	sales_data
+GROUP BY 1,2
+)
+WHERE rank =1
 ```
+![image](https://github.com/user-attachments/assets/393b0c2e-7069-4c52-a28a-efc16f53cddd)
 
 8. **Write a SQL query to find the top 5 customers based on the highest total sales **:
 ```sql
-SELECT 
-    customer_id,
-    SUM(total_sale) as total_sales
-FROM retail_sales
-GROUP BY 1
-ORDER BY 2 DESC
-LIMIT 5
+SELECT customer_id, sum(total_sale)
+FROM sales_data
+group by customer_id
+order by sum(total_sale) desc
+LIMIT 5;
 ```
+![image](https://github.com/user-attachments/assets/030f01a8-6135-406e-a7c4-836eb10f31ea)
+
 
 9. **Write a SQL query to find the number of unique customers who purchased items from each category.**:
 ```sql
-SELECT 
-    category,    
-    COUNT(DISTINCT customer_id) as cnt_unique_cs
-FROM retail_sales
-GROUP BY category
+select category,
+	   count(distinct customer_id) as NO_of_Unique_customer
+from sales_data
+group by category
 ```
+![image](https://github.com/user-attachments/assets/ac2f7b83-8099-4894-b664-7d79a5f1d6df)
+
 
 10. **Write a SQL query to create each shift and number of orders (Example Morning <12, Afternoon Between 12 & 17, Evening >17)**:
 ```sql
-WITH hourly_sale
-AS
-(
+Step-1
 SELECT *,
-    CASE
-        WHEN EXTRACT(HOUR FROM sale_time) < 12 THEN 'Morning'
-        WHEN EXTRACT(HOUR FROM sale_time) BETWEEN 12 AND 17 THEN 'Afternoon'
-        ELSE 'Evening'
-    END as shift
-FROM retail_sales
+	CASE
+		WHEN EXTRACT(HOUR FROM sale_time) <12 THEN 'Morning'
+		WHEN EXTRACT(HOUR FROM sale_time) BETWEEN 12 AND 17 THEN 'Afternoon'
+		ELSE 'Evening'
+	END AS shift
+FROM sales_data
+
+Step-2
+
+WITH Hourly_sales
+AS(
+SELECT *,
+	CASE
+		WHEN EXTRACT(HOUR FROM sale_time) <12 THEN 'Morning'
+		WHEN EXTRACT(HOUR FROM sale_time) BETWEEN 12 AND 17 THEN 'Afternoon'
+		ELSE 'Evening'
+	END AS shift
+FROM sales_data
 )
-SELECT 
-    shift,
-    COUNT(*) as total_orders    
-FROM hourly_sale
-GROUP BY shift
+SELECT
+	shift,
+	count(*) as total_orders
+from Hourly_sales
+group by shift
+
+
 ```
+![image](https://github.com/user-attachments/assets/4e6fa9f8-e5ed-46e4-a582-467e1b484d96)
+![image](https://github.com/user-attachments/assets/e5ede476-232c-49d4-8ac1-8623705475e1)
+
 
 ## Findings
 
