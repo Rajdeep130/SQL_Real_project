@@ -37,8 +37,9 @@ CREATE TABLE sales_data (
     cogs FLOAT,
     total_sale FLOAT
 );
-```
 ![image](https://github.com/user-attachments/assets/998b1cb3-ef1a-4b34-a5b2-1e370d39b41d)
+```
+
 
 
 ### 2. Data Exploration & Cleaning
