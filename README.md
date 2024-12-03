@@ -23,23 +23,23 @@ This project is designed to demonstrate SQL skills and techniques typically used
 - **Table Creation**: A table named `sales_data` is created to store the sales data. The table structure includes columns for transaction ID, sale date, sale time, customer ID, gender, age, product category, quantity sold, price per unit, cost of goods sold (COGS), and total sale amount.
 
 ```sql
-CREATE DATABASE sql_project_p1;
-
-CREATE TABLE retail_sales
-(
-    transactions_id INT PRIMARY KEY,
-    sale_date DATE,	
+DROP TABLE IF EXISTS sales_data;
+CREATE TABLE sales_data (
+    transactions_id INT PRIMARY KEY ,
+    sale_date DATE,
     sale_time TIME,
-    customer_id INT,	
-    gender VARCHAR(10),
+    customer_id INT,
+    gender VARCHAR(16),
     age INT,
-    category VARCHAR(35),
+    category VARCHAR(50),
     quantity INT,
-    price_per_unit FLOAT,	
+    price_per_unit FLOAT,
     cogs FLOAT,
     total_sale FLOAT
 );
 ```
+![image](https://github.com/user-attachments/assets/998b1cb3-ef1a-4b34-a5b2-1e370d39b41d)
+
 
 ### 2. Data Exploration & Cleaning
 
@@ -50,6 +50,7 @@ CREATE TABLE retail_sales
 
 ```sql
 SELECT COUNT(*) FROM retail_sales;
+
 SELECT COUNT(DISTINCT customer_id) FROM retail_sales;
 SELECT DISTINCT category FROM retail_sales;
 
@@ -217,6 +218,5 @@ This project is part of my portfolio, showcasing the SQL skills essential for da
 
 
 
-- **LinkedIn**: [Connect with me professionally](https://www.linkedin.com/in/najirr)
+- **LinkedIn**: [Connect with me professionally](https://www.linkedin.com/in/rajdeep-kumar-74607a254/)
 
-Thank you for your support, and I look forward to connecting with you!
