@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/c8f046f8-8850-4e27-929a-f1348912688a)# Retail Sales Analysis SQL Project
+# Retail Sales Analysis SQL Project
 
 ## Project Overview
 
